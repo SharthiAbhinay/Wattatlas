@@ -1,0 +1,68 @@
+.map-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.map-controls-metric {
+  margin: 0;
+}
+
+.map-controls-metric legend,
+.map-controls-field label {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.map-controls-field {
+  display: grid;
+}
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.segmented-option {
+  position: relative;
+}
+
+.segmented-option + .segmented-option {
+  border-left: 1px solid var(--rule-strong);
+}
+
+.segmented-option input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.segmented-option span {
+  display: block;
+  padding: 0.5rem 0.85rem;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.segmented-option input:checked + span {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.segmented-option input:focus-visible + span {
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+
+.map-controls-field select {
+  min-width: 12rem;
+}

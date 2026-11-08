@@ -1,0 +1,232 @@
+.state-detail-header {
+  margin-bottom: var(--space-4);
+}
+
+.state-detail-header h2 {
+  font-size: var(--text-2xl);
+}
+
+.state-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.state-detail-status {
+  color: var(--ink-muted);
+}
+
+/* The meter readout: digits on dark wheels, like a utility meter. */
+.state-readout {
+  margin-bottom: var(--space-4);
+}
+
+.meter {
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  margin: 0 0 var(--space-2);
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.meter-digit {
+  display: inline-block;
+  min-width: 0.78em;
+  padding: 0.14em 0.08em 0.12em;
+  border-radius: 3px;
+  background: linear-gradient(
+    to bottom,
+    #0b1620 0%,
+    var(--ink) 22%,
+    var(--ink) 78%,
+    #0b1620 100%
+  );
+  color: var(--surface);
+  text-align: center;
+}
+
+.meter-separator {
+  width: 0.15em;
+}
+
+.meter-unit {
+  align-self: flex-end;
+  margin-left: var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.state-readout-caption {
+  color: var(--ink-muted);
+}
+
+.state-figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3) var(--space-4);
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.state-figures dt {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.state-figures dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.state-section {
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+}
+
+.state-section:last-child {
+  border-bottom: 0;
+}
+
+.state-note {
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.sector-bars {
+  margin-bottom: var(--space-4);
+}
+
+.sector-bar {
+  display: grid;
+  grid-template-columns: 7.5rem 1fr;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.sector-bar-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sector-bar-track {
+  display: flex;
+  height: 0.9rem;
+  background: var(--ground);
+}
+
+.sector-bar-part + .sector-bar-part {
+  border-left: 2px solid var(--surface);
+}
+
+.sector-bar-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+
+.sector-bar-key li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.sector-bar-key span {
+  width: 0.7rem;
+  height: 0.7rem;
+}
+
+.drivers {
+  margin: 0 0 var(--space-4);
+  padding-left: var(--space-4);
+}
+
+.drivers li {
+  margin-bottom: var(--space-2);
+}
+
+.season {
+  margin: 0;
+}
+
+.season-bars {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+  height: 5rem;
+  padding-bottom: 1.2rem;
+}
+
+.season-bar {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+
+.season-bar-fill {
+  width: 100%;
+  background: var(--rule-strong);
+}
+
+.season-bar-fill.is-above {
+  background: var(--ink);
+}
+
+.season-bar-label {
+  position: absolute;
+  bottom: -1.2rem;
+  width: 100%;
+  color: var(--ink-muted);
+  font-size: var(--text-xs);
+  text-align: center;
+}
+
+.season figcaption {
+  margin-top: var(--space-2);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.forecast-headline {
+  font-size: var(--text-lg);
+  line-height: 1.4;
+}
+
+.city-table {
+  width: 100%;
+  margin-bottom: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.city-table th,
+.city-table td {
+  padding: 0.4rem 0.5rem 0.4rem 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+}
+
+.city-table thead th {
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+.city-table tbody th {
+  font-weight: 600;
+}
+
+.city-table .numeric {
+  text-align: right;
+}

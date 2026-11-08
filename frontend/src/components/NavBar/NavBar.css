@@ -1,0 +1,75 @@
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-5);
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.navbar-logo rect {
+  fill: var(--ink);
+}
+
+.navbar-logo path {
+  fill: var(--filament);
+}
+
+.navbar-nav ul {
+  display: flex;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navbar-nav a,
+.navbar-account > a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  padding: var(--space-1) 0;
+  border-bottom: 3px solid transparent;
+}
+
+.navbar-nav a:hover,
+.navbar-account > a:hover {
+  border-bottom-color: var(--rule-strong);
+}
+
+.navbar-nav a.active {
+  border-bottom-color: var(--filament);
+}
+
+.navbar-account {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+}
+
+.navbar-account > a.button {
+  border-bottom: 1px solid var(--ink);
+  color: var(--surface);
+}
+
+.navbar-user {
+  font-weight: 600;
+}

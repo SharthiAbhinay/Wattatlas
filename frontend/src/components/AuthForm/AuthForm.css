@@ -1,0 +1,25 @@
+.auth {
+  max-width: 26rem;
+  margin: var(--space-6) auto;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.auth-intro {
+  color: var(--ink-muted);
+}
+
+.auth-form {
+  margin-top: var(--space-4);
+}
+
+.auth-submit {
+  width: 100%;
+}
+
+.auth-switch {
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-sm);
+}

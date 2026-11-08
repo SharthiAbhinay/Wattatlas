@@ -1,0 +1,73 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: -3rem;
+  z-index: 20;
+  padding: var(--space-2) var(--space-3);
+  background: var(--ink);
+  color: var(--surface);
+  border-radius: var(--radius);
+}
+
+.skip-link:focus {
+  top: var(--space-3);
+}
+
+.page-status {
+  max-width: 40rem;
+  margin: var(--space-6) auto;
+  padding: 0 var(--space-4);
+}
+
+.app-footer {
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--rule);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.app-footer p {
+  max-width: 72ch;
+  margin: 0;
+}
+
+/* The map page: map on the left, the chosen state's details on the right. */
+.explore {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(22rem, 27rem);
+  align-items: start;
+}
+
+.explore-panel {
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: var(--space-5);
+  background: var(--surface);
+  border-left: 1px solid var(--rule);
+}
+
+@media (max-width: 960px) {
+  .explore {
+    grid-template-columns: 1fr;
+  }
+
+  .explore-panel {
+    position: static;
+    max-height: none;
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+    padding: var(--space-4);
+  }
+}

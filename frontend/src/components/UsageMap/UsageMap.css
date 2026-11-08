@@ -1,0 +1,105 @@
+.usage-map {
+  min-width: 0;
+  padding: var(--space-5);
+}
+
+.usage-map-header h1 {
+  margin-bottom: var(--space-4);
+}
+
+.usage-map-breadcrumb {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
+.usage-map-error {
+  color: var(--danger);
+}
+
+.usage-map-figure {
+  margin: 0;
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.usage-map-canvas {
+  position: relative;
+}
+
+.usage-map-canvas svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.map-background {
+  fill: transparent;
+}
+
+.map-state {
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.map-state.is-dimmed {
+  opacity: 0.35;
+}
+
+.map-county {
+  stroke: var(--surface);
+  stroke-width: 0.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-border,
+.map-outline,
+.map-selected,
+.map-hover {
+  fill: none;
+  pointer-events: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+
+.map-border {
+  stroke: var(--surface);
+  stroke-width: 0.9;
+}
+
+.map-outline {
+  stroke: var(--rule-strong);
+  stroke-width: 0.8;
+}
+
+.map-selected {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.map-hover {
+  stroke: var(--filament);
+  stroke-width: 2.5;
+}
+
+.usage-map-tooltip {
+  position: absolute;
+  z-index: 5;
+  max-width: 15rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  background: var(--ink);
+  color: var(--surface);
+  font-size: var(--text-sm);
+  pointer-events: none;
+}
+
+@media (max-width: 960px) {
+  .usage-map {
+    padding: var(--space-4);
+  }
+}

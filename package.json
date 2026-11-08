@@ -1,0 +1,48 @@
+{
+  "name": "wattatlas",
+  "version": "1.0.0",
+  "description": "Explore US electricity use by state, county and city, compare states, and track your own bills.",
+  "type": "module",
+  "main": "server/index.js",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "endOfLine": "lf"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "dev:client": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "seed:states": "node server/scripts/seed-states.js",
+    "seed:places": "node server/scripts/seed-places.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write . \"!**/package-lock.json\"",
+    "format:check": "prettier --check . \"!**/package-lock.json\""
+  },
+  "author": "Sharthi Abhinay and Emily Huang",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "mongodb": "^6.16.0",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "eslint": "^9.28.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "globals": "^16.2.0",
+    "prettier": "^3.5.3"
+  }
+}

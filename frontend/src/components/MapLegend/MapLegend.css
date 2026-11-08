@@ -1,0 +1,70 @@
+.map-legend {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.map-legend-title {
+  margin-bottom: var(--space-2);
+  font-weight: 600;
+}
+
+.map-legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: var(--space-3) var(--space-5);
+}
+
+.map-legend-ramp {
+  width: min(100%, 30rem);
+}
+
+.map-legend-swatches {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  height: 0.8rem;
+}
+
+.map-legend-ticks {
+  position: relative;
+  height: 1.4rem;
+  margin: 0 0.25rem;
+  color: var(--ink-muted);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.map-legend-ticks span {
+  position: absolute;
+  top: 0.2rem;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.map-legend-ticks span:first-child {
+  transform: none;
+}
+
+.map-legend-ticks span:last-child {
+  transform: translateX(-100%);
+}
+
+.map-legend-no-data {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink-muted);
+}
+
+.map-legend-no-data-swatch {
+  width: 1.4rem;
+  height: 0.8rem;
+  background: var(--map-no-data);
+}
+
+.map-legend-note {
+  max-width: 60ch;
+  margin: var(--space-2) 0 0;
+  color: var(--ink-muted);
+}

@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Build output
+frontend/dist/
+
+# Secrets: copy .env.example to .env
+.env
+.env.*
+!.env.example
+
+# Downloaded source data (NREL CSV files are large; see README)
+data/raw/
+
+# Logs and editor files
+*.log
+npm-debug.log*
+.DS_Store
+.vscode/
+.vite/
