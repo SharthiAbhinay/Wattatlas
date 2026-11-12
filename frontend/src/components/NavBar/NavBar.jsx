@@ -5,7 +5,8 @@ import "./NavBar.css";
 // Add a page to the menu by adding it here.
 const LINKS = [
   { to: "/", label: "Map", end: true },
-  { to: "/comparisons", label: "My comparisons" },
+  { to: "/comparisons", label: "My Comparisons" },
+  { to: "/household", label: "My Home"},
 ];
 
 function NavBar({ user, onLogOut }) {

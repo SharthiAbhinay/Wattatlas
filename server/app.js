@@ -5,7 +5,9 @@ import { connectDb } from "./config/db.js";
 import { configurePassport } from "./config/passport.js";
 import { createSessionMiddleware } from "./config/session.js";
 import authRouter from "./routes/auth.js";
+import billsRouter from "./routes/bills.js";
 import comparisonsRouter from "./routes/comparisons.js";
+import householdRouter from "./routes/household.js";
 import placesRouter from "./routes/places.js";
 import statesRouter from "./routes/states.js";
 
@@ -44,6 +46,8 @@ export function createApp() {
   app.use("/api/states", statesRouter);
   app.use("/api/places", placesRouter);
   app.use("/api/comparisons", comparisonsRouter);
+  app.use("/api/household", householdRouter);
+  app.use("/api/bills", billsRouter);
   app.use("/api", (req, res) => {
     res.status(404).json({ error: "There's no API route at that address." });
   });

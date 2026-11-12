@@ -11,6 +11,7 @@ import {
 import AuthForm from "./components/AuthForm/AuthForm.jsx";
 import ComparisonEditor from "./components/ComparisonEditor/ComparisonEditor.jsx";
 import ComparisonList from "./components/ComparisonList/ComparisonList.jsx";
+import Household from "./components/Household/Household.jsx";
 import NavBar from "./components/NavBar/NavBar.jsx";
 import StateDetail from "./components/StateDetail/StateDetail.jsx";
 import UsageMap from "./components/UsageMap/UsageMap.jsx";
@@ -103,6 +104,7 @@ function App() {
           <Route path="/" element={mapPage} />
           <Route path="/login" element={authPage("login")} />
           <Route path="/signup" element={authPage("register")} />
+          <Route path="/household" element={protect(<Household />)} />
           <Route path="/comparisons" element={protect(<ComparisonList />)} />
           <Route
             path="/comparisons/new"

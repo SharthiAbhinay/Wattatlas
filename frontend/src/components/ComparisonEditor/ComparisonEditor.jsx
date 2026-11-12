@@ -190,7 +190,7 @@ function ComparisonEditor() {
   if (loadError) {
     return (
       <section className="page-status">
-        <h1>Can&rsquo;t open this comparison</h1>
+        <h1>Can't open this comparison</h1>
         <p role="alert">{loadError.message}</p>
         <Link to="/comparisons">Back to my comparisons</Link>
       </section>

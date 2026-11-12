@@ -96,3 +96,35 @@ export function validateComparison(body = {}) {
 
   return { errors, value: { name, states, notes } };
 }
+
+export function validateHousehold(body = {}) {
+  const errors = [];
+  const state = trimmed(body.state).toUpperCase();
+  const size = Number(body.size);
+
+  if (!isStateAbbr(state)) errors.push("Pick a valid state.");
+  if (!Number.isInteger(size) || size < 1 || size > 20) {
+    errors.push("Household size must be a whole number from 1 to 20.");
+  }
+
+  return { errors, value: { state, size } };
+}
+
+export function validateBill(body = {}) {
+  const errors = [];
+  const month = trimmed(body.month);
+  const kwh = Number(body.kwh);
+  const cost = Number(body.cost);
+
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) {
+    errors.push("Month must look like 2025-03.");
+  }
+  if (!Number.isFinite(kwh) || kwh <= 0 || kwh > 100000) {
+    errors.push("Usage must be a positive number of kWh.");
+  }
+  if (!Number.isFinite(cost) || cost < 0 || cost > 100000) {
+    errors.push("Cost must be zero or more.");
+  }
+
+  return { errors, value: { month, kwh, cost } };
+}

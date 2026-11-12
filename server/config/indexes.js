@@ -6,6 +6,8 @@ export async function ensureIndexes() {
   const db = getDb();
   await Promise.all([
     db.collection("users").createIndex({ usernameLower: 1 }, { unique: true }),
+    db.collection("households").createIndex({ userId: 1 }, { unique: true }),
+    db.collection("bills").createIndex({ userId: 1, month: -1 }, { unique: true }),
     db.collection("comparisons").createIndex({ userId: 1, updatedAt: -1 }),
     db
       .collection("stateSales")
