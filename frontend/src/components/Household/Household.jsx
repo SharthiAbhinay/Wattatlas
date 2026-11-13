@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { addBill, getBills, getYearBills, updateBill } from "../../lib/api.js";
+import {
+  addBill,
+  getBills,
+  getHousehold,
+  getYearBills,
+  updateBill,
+} from "../../lib/api.js";
+import HouseholdSetup from "./HouseholdSetup.jsx";
 import MonthlyBarChart from "../MonthlyBarChart/MonthlyBarChart.jsx";
 import "./Household.css";
 
@@ -36,6 +43,18 @@ export default function Household() {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ kwh: "", cost: "" });
   const [error, setError] = useState("");
+  // undefined while loading, null when the user has no household yet.
+  const [household, setHousehold] = useState(undefined);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    getHousehold(controller.signal)
+      .then((data) => setHousehold(data.household))
+      .catch((err) => {
+        if (err.name !== "AbortError") setError(err.message);
+      });
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -208,10 +227,32 @@ export default function Household() {
     );
   }
 
+  if (household === undefined) {
+    return (
+      <p className="page-status" role="status">
+        {error || "Loading your household…"}
+      </p>
+    );
+  }
+
+  // New accounts (and households saved before counties existed) are asked
+  // where they live before seeing the dashboard.
+  if (!household?.county) {
+    return (
+      <HouseholdSetup
+        initialState={household?.state ?? ""}
+        onSaved={setHousehold}
+      />
+    );
+  }
+
   return (
     <main className="household">
       <section>
         <h2>Your Household</h2>
+        <p>
+          {household.county}, {household.state}
+        </p>
       </section>
       <section>
         <h2>Power Usage</h2>

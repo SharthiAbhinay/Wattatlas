@@ -18,6 +18,7 @@
     "build": "npm --prefix frontend install && npm --prefix frontend run build",
     "seed:states": "node server/scripts/seed-states.js",
     "seed:places": "node server/scripts/seed-places.js",
+    "seed:utilities": "node server/scripts/seed-utilities.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write . \"!**/package-lock.json\"",

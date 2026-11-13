@@ -66,5 +66,16 @@ export async function ensureIndexes() {
       ),
     db.collection("stateSales").createIndex({ year: 1, sector: 1 }),
     db.collection("places").createIndex({ type: 1, state: 1, total: -1 }),
+    db.collection("utilities").createIndex({ utilityId: 1 }, { unique: true }),
+    db.collection("utilities").createIndex({ states: 1, name: 1 }),
+    db
+      .collection("utilityStats")
+      .createIndex({ utilityId: 1, state: 1, year: -1 }),
+    db.collection("utilityStats").createIndex({ state: 1, year: -1 }),
+    db
+      .collection("utilityTerritories")
+      .createIndex({ state: 1, county: 1, year: -1 }),
+    db.collection("utilityTerritories").createIndex({ countyFips: 1, year: -1 }),
+    db.collection("utilityTerritories").createIndex({ utilityId: 1, year: -1 }),
   ]);
 }

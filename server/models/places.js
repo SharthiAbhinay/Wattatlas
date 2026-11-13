@@ -30,6 +30,18 @@ export async function listCities(state, { page, limit }) {
   return { items, total };
 }
 
+// The county called `name` in `state` (ignoring case), or null if the state
+// has no such county. Returns its stored spelling and FIPS code.
+export function findCounty(state, name) {
+  return places().findOne(
+    { type: "county", state, name },
+    {
+      projection: { _id: 0, name: 1, fips: 1 },
+      collation: { locale: "en", strength: 2 },
+    }
+  );
+}
+
 export function listCounties(state) {
   return places()
     .find({ type: "county", state }, { projection: FIELDS })

@@ -55,7 +55,11 @@ export const register = (details) =>
   apiFetch("/api/auth/register", { method: "POST", body: details });
 export const logOut = () => apiFetch("/api/auth/logout", { method: "POST" });
 
-export const getBills = (signal) => apiFetch("/api/bills", { signal });
+export const getHousehold = (signal) => apiFetch("/api/household", { signal });
+export const saveHousehold = (household) =>
+  apiFetch("/api/household", { method: "PUT", body: household });
+
+export const getBills =(signal) => apiFetch("/api/bills", { signal });
 export const getYearBills = (year, signal) =>
   apiFetch(`/api/bills/year?year=${encodeURIComponent(year)}`, { signal });
 export const addBill =(bill) =>

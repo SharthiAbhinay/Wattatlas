@@ -10,14 +10,15 @@ export function findHousehold(userId) {
 }
 
 // Bills belong to a household, so a user who hasn't set one up yet gets an
-// empty one (no state or size) the first time they need it.
+// empty one (no state or county) the first time they need it.
 export async function ensureHousehold(userId) {
   const existing = await findHousehold(userId);
   if (existing) return existing;
   const now = new Date();
   const doc = {
     state: null,
-    size: null,
+    county: null,
+    countyFips: null,
     memberIds: [userId],
     createdAt: now,
     updatedAt: now,
@@ -26,19 +27,20 @@ export async function ensureHousehold(userId) {
   return { ...doc, _id: insertedId };
 }
 
-export async function saveHousehold(userId, { state, size }) {
+export async function saveHousehold(userId, { state, county, countyFips }) {
   const existing = await findHousehold(userId);
   if (existing) {
     return households().findOneAndUpdate(
       { _id: existing._id },
-      { $set: { state, size, updatedAt: new Date() } },
+      { $set: { state, county, countyFips, updatedAt: new Date() } },
       { returnDocument: "after" }
     );
   }
   const now = new Date();
   const doc = {
     state,
-    size,
+    county,
+    countyFips,
     memberIds: [userId],
     createdAt: now,
     updatedAt: now,

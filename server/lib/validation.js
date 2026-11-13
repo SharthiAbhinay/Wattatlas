@@ -100,14 +100,15 @@ export function validateComparison(body = {}) {
 export function validateHousehold(body = {}) {
   const errors = [];
   const state = trimmed(body.state).toUpperCase();
-  const size = Number(body.size);
+  const county = trimmed(body.county);
 
   if (!isStateAbbr(state)) errors.push("Pick a valid state.");
-  if (!Number.isInteger(size) || size < 1 || size > 20) {
-    errors.push("Household size must be a whole number from 1 to 20.");
-  }
+  if (!county) errors.push("Pick your county.");
+  if (county.length > 100) errors.push("County name is too long.");
 
-  return { errors, value: { state, size } };
+  // Whether the county exists in that state is checked against the places
+  // data by the route, since it needs the database.
+  return { errors, value: { state, county } };
 }
 
 export function validateBill(body = {}) {
