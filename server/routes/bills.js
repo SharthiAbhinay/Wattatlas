@@ -5,6 +5,7 @@ import {
   deleteBill,
   findBillById,
   listBills,
+  listBillsForYear,
   updateBill,
 } from "../models/bills.js";
 import { ensureHousehold, findHousehold } from "../models/households.js";
@@ -38,6 +39,17 @@ router.get("/", async (req, res) => {
     current: items.find((b) => b.month === month) ?? null,
     items,
   });
+});
+
+// Every bill of one year (default: this year), for the usage charts.
+router.get("/year", async (req, res) => {
+  const year = req.query.year ?? currentMonth().slice(0, 4);
+  if (!/^\d{4}$/.test(String(year))) {
+    return res.status(400).json({ error: "Year must look like 2025." });
+  }
+  const household = await findHousehold(req.user._id);
+  const docs = household ? await listBillsForYear(household._id, year) : [];
+  res.json({ year: Number(year), items: docs.map(toClientBill) });
 });
 
 // Adds this month's bill. A household can only have one per month.

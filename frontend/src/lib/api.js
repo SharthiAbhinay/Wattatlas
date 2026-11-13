@@ -56,7 +56,9 @@ export const register = (details) =>
 export const logOut = () => apiFetch("/api/auth/logout", { method: "POST" });
 
 export const getBills = (signal) => apiFetch("/api/bills", { signal });
-export const addBill = (bill) =>
+export const getYearBills = (year, signal) =>
+  apiFetch(`/api/bills/year?year=${encodeURIComponent(year)}`, { signal });
+export const addBill =(bill) =>
   apiFetch("/api/bills", { method: "POST", body: bill });
 export const updateBill = (id, bill) =>
   apiFetch(`/api/bills/${encodeURIComponent(id)}`, {

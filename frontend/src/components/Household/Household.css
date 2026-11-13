@@ -37,6 +37,30 @@
   background-color: white;
 }
 
+.chart-title {
+  margin: 1rem 0 0.25rem;
+  font-size: var(--text-sm);
+}
+
+.chart-table {
+  margin-top: 1rem;
+  font-size: var(--text-sm);
+}
+
+.chart-table table {
+  width: 100%;
+  margin-top: 0.5rem;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-table th,
+.chart-table td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+}
+
 .member-list {
   display: flex;
   flex-wrap: wrap;

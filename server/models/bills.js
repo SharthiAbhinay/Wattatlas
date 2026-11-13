@@ -13,6 +13,14 @@ export function listBills(householdId, limit = 5) {
     .toArray();
 }
 
+// Every bill the household has for one calendar year, January first.
+export function listBillsForYear(householdId, year) {
+  return bills()
+    .find({ householdId, month: { $gte: `${year}-01`, $lte: `${year}-12` } })
+    .sort({ month: 1 })
+    .toArray();
+}
+
 export function findBill(householdId, month) {
   return bills().findOne({ householdId, month });
 }

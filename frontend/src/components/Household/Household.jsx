@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react";
-import { addBill, getBills, updateBill } from "../../lib/api.js";
+import { addBill, getBills, getYearBills, updateBill } from "../../lib/api.js";
+import MonthlyBarChart from "../MonthlyBarChart/MonthlyBarChart.jsx";
 import "./Household.css";
+
+const KWH_COLOR = "#0072b2";
+const COST_COLOR = "#d55e00";
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+const formatKwh = (n) => `${Math.round(n).toLocaleString("en-US")} kWh`;
+const formatDollars = (n) =>
+  `$${n.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+const compactKwh = (n) => (n >= 10000 ? `${n / 1000}K` : n.toLocaleString("en-US"));
+const compactDollars = (n) =>
+  `$${n >= 10000 ? `${n / 1000}K` : n.toLocaleString("en-US")}`;
 
 // "2026-11" -> "November 2026"
 function formatMonth(month) {
@@ -13,6 +27,7 @@ function formatMonth(month) {
 
 export default function Household() {
   const [bills, setBills] = useState([]);
+  const [yearBills, setYearBills] = useState([]);
   const [currentBill, setCurrentBill] = useState(null);
   const [currentMonth, setCurrentMonth] = useState("");
   const [loaded, setLoaded] = useState(false);
@@ -30,7 +45,9 @@ export default function Household() {
         setCurrentBill(data.current);
         setCurrentMonth(data.currentMonth);
         setLoaded(true);
+        return getYearBills(data.currentMonth.slice(0, 4), controller.signal);
       })
+      .then((data) => setYearBills(data.items))
       .catch((err) => {
         if (err.name !== "AbortError") setError(err.message);
       });
@@ -38,7 +55,23 @@ export default function Household() {
   }, []);
 
   const pastBills = bills.filter((b) => b.id !== currentBill?.id);
-  const totalKwh = bills.reduce((sum, b) => sum + Number(b.kwh), 0);
+  const year = currentMonth.slice(0, 4);
+  // One entry per calendar month; null where the household has no bill.
+  const kwhByMonth = Array(12).fill(null);
+  const costByMonth = Array(12).fill(null);
+  for (const b of yearBills) {
+    const i = Number(b.month.slice(5, 7)) - 1;
+    kwhByMonth[i] = Number(b.kwh);
+    costByMonth[i] = Number(b.cost);
+  }
+  const totalKwh = kwhByMonth.reduce((sum, v) => sum + (v ?? 0), 0);
+  const totalCost = costByMonth.reduce((sum, v) => sum + (v ?? 0), 0);
+
+  // Keep the yearly charts in step with a bill that was just added or edited.
+  function syncYear(bill) {
+    if (!bill.month.startsWith(year)) return;
+    setYearBills([...yearBills.filter((b) => b.id !== bill.id), bill]);
+  }
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -50,6 +83,7 @@ export default function Household() {
     try {
       const { bill } = await addBill(form);
       setBills([bill, ...bills].slice(0, 5));
+      syncYear(bill);
       setCurrentBill(bill);
       setAdding(false);
       setForm({ kwh: "", cost: "" });
@@ -74,6 +108,7 @@ export default function Household() {
     try {
       const { bill } = await updateBill(id, editForm);
       setBills(bills.map((b) => (b.id === id ? bill : b)));
+      syncYear(bill);
       if (currentBill?.id === id) setCurrentBill(bill);
       setEditingId(null);
     } catch (err) {
@@ -181,8 +216,46 @@ export default function Household() {
       <section>
         <h2>Power Usage</h2>
         <div className="household-card">
-          <p>Total logged: {totalKwh} kWh</p>
-          {/* TODO: chart of kWh per month */}
+          <p>
+            {year} total: {formatKwh(totalKwh)} &middot; {formatDollars(totalCost)}
+          </p>
+          <h3 className="chart-title">Power used (kWh)</h3>
+          <MonthlyBarChart
+            values={kwhByMonth}
+            color={KWH_COLOR}
+            label={`Power used per month in ${year}, in kilowatt-hours`}
+            valueFormat={formatKwh}
+            tickFormat={compactKwh}
+          />
+          <h3 className="chart-title">Price paid ($)</h3>
+          <MonthlyBarChart
+            values={costByMonth}
+            color={COST_COLOR}
+            label={`Amount paid per month in ${year}, in dollars`}
+            valueFormat={formatDollars}
+            tickFormat={compactDollars}
+          />
+          <details className="chart-table">
+            <summary>View as table</summary>
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Month</th>
+                  <th scope="col">kWh</th>
+                  <th scope="col">Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MONTH_NAMES.map((name, i) => (
+                  <tr key={name}>
+                    <th scope="row">{name}</th>
+                    <td>{kwhByMonth[i] == null ? "—" : formatKwh(kwhByMonth[i])}</td>
+                    <td>{costByMonth[i] == null ? "—" : formatDollars(costByMonth[i])}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
         </div>
       </section>
       <section>
