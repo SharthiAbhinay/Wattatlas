@@ -4,7 +4,13 @@ import { findHousehold, saveHousehold } from "../models/households.js";
 import { validateHousehold } from "../lib/validation.js";
 
 function toClientHousehold(doc) {
-  return { state: doc.state, size: doc.size, updatedAt: doc.updatedAt };
+  return {
+    id: doc._id.toString(),
+    memberIds: doc.memberIds.map((id) => id.toString()),
+    state: doc.state,
+    size: doc.size,
+    updatedAt: doc.updatedAt,
+  };
 }
 
 const router = Router();

@@ -6,7 +6,7 @@ import "./NavBar.css";
 const LINKS = [
   { to: "/", label: "Map", end: true },
   { to: "/comparisons", label: "My Comparisons" },
-  { to: "/household", label: "My Home"},
+  { to: "/household", label: "My Household" },
 ];
 
 function NavBar({ user, onLogOut }) {

@@ -2,19 +2,47 @@ import { getDb } from "../config/db.js";
 
 const households = () => getDb().collection("households");
 
-// One household per user.
+// Each household has its own _id and a memberIds array of user ObjectIds.
+// A user belongs to at most one household (unique index on memberIds).
 
 export function findHousehold(userId) {
-  return households().findOne({ userId });
+  return households().findOne({ memberIds: userId });
 }
 
-export function saveHousehold(userId, { state, size }) {
-  return households().findOneAndUpdate(
-    { userId },
-    {
-      $set: { state, size, updatedAt: new Date() },
-      $setOnInsert: { userId, createdAt: new Date() },
-    },
-    { upsert: true, returnDocument: "after" }
-  );
+// Bills belong to a household, so a user who hasn't set one up yet gets an
+// empty one (no state or size) the first time they need it.
+export async function ensureHousehold(userId) {
+  const existing = await findHousehold(userId);
+  if (existing) return existing;
+  const now = new Date();
+  const doc = {
+    state: null,
+    size: null,
+    memberIds: [userId],
+    createdAt: now,
+    updatedAt: now,
+  };
+  const { insertedId } = await households().insertOne(doc);
+  return { ...doc, _id: insertedId };
+}
+
+export async function saveHousehold(userId, { state, size }) {
+  const existing = await findHousehold(userId);
+  if (existing) {
+    return households().findOneAndUpdate(
+      { _id: existing._id },
+      { $set: { state, size, updatedAt: new Date() } },
+      { returnDocument: "after" }
+    );
+  }
+  const now = new Date();
+  const doc = {
+    state,
+    size,
+    memberIds: [userId],
+    createdAt: now,
+    updatedAt: now,
+  };
+  const { insertedId } = await households().insertOne(doc);
+  return { ...doc, _id: insertedId };
 }

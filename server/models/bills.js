@@ -2,24 +2,50 @@ import { getDb } from "../config/db.js";
 
 const bills = () => getDb().collection("bills");
 
-// One bill per user per month; every query filters on userId.
+// One bill per household per month. householdId says whose bill it is;
+// authorId is the household member (user) who entered it.
 
-export function listBills(userId) {
-  return bills().find({ userId }).sort({ month: -1 }).toArray();
+export function listBills(householdId, limit = 5) {
+  return bills()
+    .find({ householdId })
+    .sort({ month: -1 })
+    .limit(limit)
+    .toArray();
 }
 
-export function saveBill(userId, { month, kwh, cost }) {
+export function findBill(householdId, month) {
+  return bills().findOne({ householdId, month });
+}
+
+// Returns the new bill, or null when the household already has one for that
+// month (the unique index on householdId + month decides, so two members
+// submitting at once can't both win).
+export async function createBill(householdId, authorId, { month, kwh, cost }) {
+  const now = new Date();
+  const doc = { householdId, authorId, month, kwh, cost, createdAt: now };
+  try {
+    const { insertedId } = await bills().insertOne(doc);
+    return { ...doc, _id: insertedId };
+  } catch (err) {
+    if (err.code === 11000) return null;
+    throw err;
+  }
+}
+
+export function findBillById(householdId, _id) {
+  return bills().findOne({ _id, householdId });
+}
+
+// The month and author stay as they were; only the figures change.
+export function updateBill(householdId, _id, { kwh, cost }) {
   return bills().findOneAndUpdate(
-    { userId, month },
-    {
-      $set: { kwh, cost, updatedAt: new Date() },
-      $setOnInsert: { userId, month, createdAt: new Date() },
-    },
-    { upsert: true, returnDocument: "after" }
+    { _id, householdId },
+    { $set: { kwh, cost, updatedAt: new Date() } },
+    { returnDocument: "after" }
   );
 }
 
-export async function deleteBill(userId, _id) {
-  const { deletedCount } = await bills().deleteOne({ _id, userId });
+export async function deleteBill(householdId, _id) {
+  const { deletedCount } = await bills().deleteOne({ _id, householdId });
   return deletedCount === 1;
 }

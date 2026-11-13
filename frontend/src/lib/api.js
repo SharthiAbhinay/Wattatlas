@@ -55,7 +55,16 @@ export const register = (details) =>
   apiFetch("/api/auth/register", { method: "POST", body: details });
 export const logOut = () => apiFetch("/api/auth/logout", { method: "POST" });
 
-export const getComparison = (id, signal) =>
+export const getBills = (signal) => apiFetch("/api/bills", { signal });
+export const addBill = (bill) =>
+  apiFetch("/api/bills", { method: "POST", body: bill });
+export const updateBill = (id, bill) =>
+  apiFetch(`/api/bills/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    body: bill,
+  });
+
+export const getComparison =(id, signal) =>
   apiFetch(`/api/comparisons/${encodeURIComponent(id)}`, { signal });
 export const createComparison = (comparison) =>
   apiFetch("/api/comparisons", { method: "POST", body: comparison });

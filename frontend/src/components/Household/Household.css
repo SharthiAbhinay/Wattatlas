@@ -1,0 +1,120 @@
+.household {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+  box-sizing: border-box;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.household > section {
+  grid-column: 1;
+}
+
+.household > section:first-child {
+  grid-column: 1 / -1;
+}
+
+.household > .household-bills {
+  grid-column: 2;
+  grid-row: 2 / span 2;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+}
+
+.household-bills .household-card {
+  flex: 1;
+}
+
+.household-card {
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  padding: 1rem;
+  min-height: 8rem;
+  background-color: white;
+}
+
+.member-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.member-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #d0d0d0;
+}
+
+.member-name {
+  font-size: 0.875rem;
+}
+
+.bill-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  background-color: #f2f2f2;
+}
+
+.bill-card--current {
+  border-color: #f5b87a;
+  background-color: #fff1e0;
+}
+
+.bill-edit-form {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bill-edit-form input {
+  width: 6rem;
+}
+
+.bill-history {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.household-bills form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (max-width: 800px) {
+  .household {
+    grid-template-columns: 1fr;
+  }
+
+  .household > .household-bills {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
