@@ -2,7 +2,7 @@
 
 An interactive map of electricity use across the United States. Zoom from the whole country into a state's counties and cities, see what drives a state's usage and where it is heading, track your own household's bills, and compare states and utility companies side by side.
 
-Live site: _TODO: add the deployed URL_
+Live site: https://wattatlas-frontend-nfdt.vercel.app/
 
 ## Authors
 
