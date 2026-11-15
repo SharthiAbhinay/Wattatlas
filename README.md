@@ -40,7 +40,7 @@ A quick tour: the US map, zooming into Texas, and switching between use per pers
 
 ## Video Demo
 
-_TODO: add the link to the narrated walkthrough._
+Our narrated walkthrough: [watch on YouTube](https://youtu.be/vv5hPiiyPlM)
 
 ## Presentation Slides
 
