@@ -21,10 +21,6 @@ export function listBillsForYear(householdId, year) {
     .toArray();
 }
 
-export function findBill(householdId, month) {
-  return bills().findOne({ householdId, month });
-}
-
 // Returns the new bill, or null when the household already has one for that
 // month (the unique index on householdId + month decides, so two members
 // submitting at once can't both win).

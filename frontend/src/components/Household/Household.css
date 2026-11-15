@@ -19,7 +19,7 @@
 
 .household > .household-bills {
   grid-column: 2;
-  grid-row: 2 / span 2;
+  grid-row: 2;
   align-self: stretch;
   display: flex;
   flex-direction: column;
@@ -62,25 +62,6 @@
   margin: 0;
 }
 
-.household-setup {
-  display: block;
-  max-width: 28rem;
-}
-
-.setup-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  min-height: 0;
-}
-
-.setup-form label {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  font-size: var(--text-sm);
-}
-
 .chart-title {
   margin: 1rem 0 0.25rem;
   font-size: var(--text-sm);
@@ -103,33 +84,6 @@
   padding: 0.25rem 0.5rem;
   border-bottom: 1px solid var(--rule);
   text-align: left;
-}
-
-.member-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.25rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.member {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.member-avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background-color: #d0d0d0;
-}
-
-.member-name {
-  font-size: 0.875rem;
 }
 
 .bill-card {

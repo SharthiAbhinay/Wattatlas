@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { saveHousehold } from "../../lib/api.js";
 import { useApiData } from "../../lib/useApiData.js";
+import "./HouseholdSetup.css";
 
 // First-visit prompt: where does the household live? Both fields are
 // dropdowns fed by the server's own lists, and the server checks again that
@@ -64,13 +65,13 @@ export default function HouseholdSetup({
     state && !counties.loading && !counties.error && countyNames.length === 0;
 
   return (
-    <main className="household household-setup">
+    <div className="household household-setup">
       <section>
-        <h2>
+        <h1>
           {editing
             ? "Edit your household"
             : "Welcome! Where is your household?"}
-        </h2>
+        </h1>
         <p>
           Tell us your state and county, and your electric utility if you know
           it.
@@ -147,7 +148,7 @@ export default function HouseholdSetup({
           )}
         </form>
       </section>
-    </main>
+    </div>
   );
 }
 

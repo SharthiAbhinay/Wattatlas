@@ -1,0 +1,18 @@
+.household-setup {
+  display: block;
+  max-width: 28rem;
+}
+
+.setup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.setup-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: var(--text-sm);
+}

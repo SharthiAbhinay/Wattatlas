@@ -219,6 +219,7 @@ export default function Household() {
         <input
           name="kwh"
           type="number"
+          aria-label="kWh used"
           placeholder="kWh"
           value={form.kwh}
           onChange={handleChange}
@@ -228,6 +229,7 @@ export default function Household() {
           name="cost"
           type="number"
           step="0.01"
+          aria-label="Amount paid ($)"
           placeholder="Cost ($)"
           value={form.cost}
           onChange={handleChange}
@@ -242,7 +244,7 @@ export default function Household() {
   } else if (loaded) {
     billContent = (
       <>
-        <p>No bill submitted for {currentMonth} yet.</p>
+        <p>No bill submitted for {formatMonth(currentMonth)} yet.</p>
         <button type="button" onClick={() => setAdding(true)}>
           Add bill
         </button>
@@ -288,9 +290,9 @@ export default function Household() {
   }
 
   return (
-    <main className="household">
+    <div className="household">
       <section>
-        <h2>Your Household</h2>
+        <h1>Your Household</h1>
         <div className="household-summary">
           <p>
             {household.county}, {household.state}
@@ -353,21 +355,6 @@ export default function Household() {
           </details>
         </div>
       </section>
-      <section>
-        <h2>Members of your household</h2>
-        <div className="household-card">
-          {/* TODO: replace placeholders with real household members */}
-          <ul className="member-list">
-            {[1, 2, 3].map((n) => (
-              <li key={n} className="member">
-                <span className="member-avatar" aria-hidden="true" />
-                <span className="member-name">Member {n}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       <section className="household-bills">
         <h2>Monthly Bills</h2>
         <div className="household-card">
@@ -424,6 +411,8 @@ export default function Household() {
           )}
         </div>
       </section>
-    </main>
+    </div>
   );
 }
+
+Household.propTypes = {};

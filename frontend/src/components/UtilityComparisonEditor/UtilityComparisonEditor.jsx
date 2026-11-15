@@ -12,6 +12,7 @@ import PriceBarChart from "../PriceBarChart/PriceBarChart.jsx";
 import TrendChart from "../TrendChart/TrendChart.jsx";
 // Shares its layout, table and chip styles with the state comparison editor.
 import "../ComparisonEditor/ComparisonEditor.css";
+import "./UtilityComparisonEditor.css";
 
 const MAX_UTILITIES = 4;
 const NAME_MAX = 80;

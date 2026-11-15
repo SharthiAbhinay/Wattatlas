@@ -53,42 +53,6 @@
   min-width: 0;
 }
 
-.comparison-right {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  min-width: 0;
-}
-
-.utility-options {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--rule);
-}
-
-.utility-option {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-4);
-  padding: var(--space-3) 0;
-  border-bottom: 1px solid var(--rule);
-}
-
-.utility-option-main {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 16rem;
-  min-width: 0;
-}
-
-.utility-option-figures {
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
-}
-
 .comparison-preview-empty {
   color: var(--ink-muted);
 }
@@ -145,39 +109,4 @@
     gap: var(--space-5);
     padding: var(--space-5) var(--space-4);
   }
-}
-
-.comparison-instructions {
-  margin: 0 0 var(--space-4);
-  color: var(--ink-muted);
-  font-size: var(--text-xs);
-}
-
-.comparison-table .comparison-table-actions td {
-  border-bottom: 0;
-  padding-top: var(--space-3);
-}
-
-.comparison-location {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-}
-
-.comparison-location .comparison-instructions {
-  margin: 0;
-}
-
-/* Utility names can be long, so let them wrap under themselves. */
-.comparison-table-wrap thead th {
-  min-width: 7rem;
-  padding-right: var(--space-3);
-  white-space: normal;
-  overflow-wrap: anywhere;
-  vertical-align: top;
-}
-
-.comparison-table-wrap .comparison-table-key {
-  vertical-align: baseline;
 }
