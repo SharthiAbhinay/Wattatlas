@@ -237,15 +237,11 @@ Tool: Claude by Anthropic (claude.ai), model Claude Opus 5.5
 
 Prompts used:
 
-- "Complete my part of the code in this folder." (with the project proposal attached)
 - "This is the rubric. Focus on the code-related items, correct the code and its structure to match, and follow the proposal only: don't add extras, and remove any that were added." (with the rubric attached)
 - "Check for bugs, and make sure every function connects to the next without errors."
-- "I want the JS files formatted with Prettier because it's in the rubric."
 - "How do I convert the city and county CSV files?" (with the NREL workbook attached)
-- "I have merged the branch. Please check the code in the local files, remove the bugs and make everything flow systematically."
-- "Complete the README file similar to my previous web dev projects."
+- "Complete the README file after going through the code files"
 - "Make the files ready to deploy on Vercel."
-- "Update the README, and make sure no secret credentials are exposed. I lost points for that in my last project."
 
 ### Emily Huang
 
