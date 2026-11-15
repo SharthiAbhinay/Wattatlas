@@ -245,7 +245,10 @@ Prompts used:
 
 ### Emily Huang
 
-_TODO: add Emily's tool and prompts._
+Tool: Claude by Antropic, model Opus 5.5
+- "Write a quick documentation on what is present in this code base and the funtion of each file. Keep it short."
+- "What are the steps I would take to include utility company data into a code project? No code."
+- "Which of these excel files from EIA are relevant to calculating the average monthly bill, average annual bill, average price, and average usage?"
 
 ## Sources and References
 
