@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   addBill,
+  deleteBill,
   getBills,
   getHousehold,
   getYearBills,
@@ -158,8 +159,24 @@ export default function Household() {
     }
   }
 
-  // One bill as a card: its figures in a row plus an Edit button, or the
-  // edit form in its place while that bill is being edited.
+  async function handleDelete(bill) {
+    const month = formatMonth(bill.month);
+    if (!window.confirm(`Delete the ${month} bill? This can't be undone.`)) {
+      return;
+    }
+    setError("");
+    try {
+      await deleteBill(bill.id);
+      setBills(bills.filter((b) => b.id !== bill.id));
+      setYearBills(yearBills.filter((b) => b.id !== bill.id));
+      if (currentBill?.id === bill.id) setCurrentBill(null);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  // One bill as a card: its figures in a row plus Edit and Delete buttons, or
+  // the edit form in its place while that bill is being edited.
   function renderBill(bill, className) {
     if (editingId === bill.id) {
       return (
@@ -201,6 +218,13 @@ export default function Household() {
         <span>${bill.cost}</span>
         <button type="button" onClick={() => startEdit(bill)}>
           Edit
+        </button>
+        <button
+          type="button"
+          onClick={() => handleDelete(bill)}
+          aria-label={`Delete the ${formatMonth(bill.month)} bill`}
+        >
+          Delete
         </button>
       </li>
     );

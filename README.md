@@ -129,7 +129,7 @@ For each calendar month, the forecast fits a straight line through that month's 
 1. On the map, choose what to color the states by: use per person, total use or average price. Hover over a state to see its figure.
 2. Click a state, or choose it under "Zoom to a state". The map zooms into its counties, and the panel on the right explains what drives its usage, shows ten years of history, forecasts next year and lists its cities.
 3. Create an account (top right) to save your own data.
-4. Under **My Household**, pick your state, county and utility, then add each month's bill. The charts show the year's usage and cost, and the list shows the utilities serving your county.
+4. Under **My Household**, pick your state, county and utility, then add each month's bill, and edit or delete it later. The charts show the year's usage and cost, and the list shows the utilities serving your county.
 5. Under **My Comparisons**, compare up to four states or up to four utility companies, add notes, and come back to edit or delete them. You can also start a state comparison from any state on the map.
 
 ## Instructions to Build
@@ -177,7 +177,7 @@ npm run seed:places -- --type city --file data/raw/cities.csv
 npm run seed:places -- --type county --file data/raw/counties.csv
 ```
 
-**Utilities (EIA-861).** From https://www.eia.gov/electricity/data/eia861/, save the Utility Data, Sales to Ultimate Customers and Service Territory files for a year as CSV in `data/raw/utilities/<year>/`, named `Utility_Data_<year>.csv`, `Sales_Ult_Cust_<year>.csv` and `Service_Territory_<year>.csv`. Then load each year (we loaded 2020 to 2024):
+**Utilities (EIA-861).** From https://www.eia.gov/electricity/data/eia861/, save the Utility Data, Sales to Ultimate Customers and Service Territory files for a year as CSV in `data/raw/utilities/<year>/`, named `Utility_Data_<year>.csv`, `Sales_Ult_Cust_<year>.csv` and `Service_Territory_<year>.csv`. Then load each year (we loaded 2020 to 2025):
 
 ```
 npm run seed:utilities -- --year 2024
@@ -212,7 +212,7 @@ npm run format
 
 ## Deploying to Vercel
 
-1. Push the repository to GitHub and import it in Vercel (**Add New > Project**). `vercel.json` already sets the install command, the build command and the output folder, so leave those settings as they are.
+1. Push the repository to GitHub and import it in Vercel (**Add New > Project**). Leave the Root Directory as `./` and set the Framework Preset to **Other**. `vercel.json` already sets the install command, the build command and the output folder, so leave those settings as they are.
 2. In the project's **Settings > Environment Variables**, add `MONGODB_URI`, `DB_NAME`, `SESSION_SECRET` and `NODE_ENV` set to `production`.
 3. In MongoDB Atlas, under **Network Access**, allow access from anywhere (`0.0.0.0/0`), because Vercel's servers don't have fixed IP addresses.
 4. Load the data from your own computer with the seed scripts above. They write straight to Atlas and create the database indexes, so the deployed app needs no extra setup.

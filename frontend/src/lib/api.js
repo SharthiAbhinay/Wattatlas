@@ -64,6 +64,8 @@ export const getYearBills = (year, signal) =>
   apiFetch(`/api/bills/year?year=${encodeURIComponent(year)}`, { signal });
 export const addBill = (bill) =>
   apiFetch("/api/bills", { method: "POST", body: bill });
+export const deleteBill = (id) =>
+  apiFetch(`/api/bills/${encodeURIComponent(id)}`, { method: "DELETE" });
 export const updateBill = (id, bill) =>
   apiFetch(`/api/bills/${encodeURIComponent(id)}`, {
     method: "PUT",
