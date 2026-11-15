@@ -32,7 +32,9 @@ router.use(requireAuth);
 // The household's latest 5 bills, whoever in the household entered them.
 router.get("/", async (req, res) => {
   const household = await findHousehold(req.user._id);
-  const items = household ? (await listBills(household._id)).map(toClientBill) : [];
+  const items = household
+    ? (await listBills(household._id)).map(toClientBill)
+    : [];
   const month = currentMonth();
   res.json({
     currentMonth: month,
@@ -74,9 +76,13 @@ router.put("/:id", async (req, res) => {
   const id = parseObjectId(req.params.id);
   const household = await findHousehold(req.user._id);
   const existing = id && household && (await findBillById(household._id, id));
-  if (!existing) return res.status(404).json({ error: "That bill doesn't exist." });
+  if (!existing)
+    return res.status(404).json({ error: "That bill doesn't exist." });
 
-  const { errors, value } = validateBill({ ...req.body, month: existing.month });
+  const { errors, value } = validateBill({
+    ...req.body,
+    month: existing.month,
+  });
   if (errors.length) {
     return res.status(400).json({ error: errors[0], details: errors });
   }
@@ -88,7 +94,8 @@ router.delete("/:id", async (req, res) => {
   const id = parseObjectId(req.params.id);
   const household = await findHousehold(req.user._id);
   const deleted = id && household && (await deleteBill(household._id, id));
-  if (!deleted) return res.status(404).json({ error: "That bill doesn't exist." });
+  if (!deleted)
+    return res.status(404).json({ error: "That bill doesn't exist." });
   res.status(204).end();
 });
 

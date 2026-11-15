@@ -1,7 +1,11 @@
-.comparison-list {
+.comparison-page {
   max-width: 52rem;
   margin: 0 auto;
   padding: var(--space-6) var(--space-4);
+}
+
+.comparison-list + .comparison-list {
+  margin-top: var(--space-6);
 }
 
 .comparison-list-header {
@@ -13,7 +17,7 @@
   margin-bottom: var(--space-3);
 }
 
-.comparison-list-header h1 {
+.comparison-list-header h2 {
   margin: 0;
 }
 
@@ -54,7 +58,7 @@
   min-width: 0;
 }
 
-.comparison-item h2 {
+.comparison-item h3 {
   margin-bottom: var(--space-2);
   font-size: var(--text-lg);
 }

@@ -29,12 +29,37 @@
   flex: 1;
 }
 
+.household > .household-utilities {
+  grid-column: 1 / -1;
+}
+
+.utility-card strong {
+  flex: 1 1 14rem;
+}
+
+.utility-note {
+  margin: 1rem 0 0;
+  color: var(--ink-muted);
+  font-size: var(--text-xs);
+}
+
 .household-card {
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   padding: 1rem;
   min-height: 8rem;
   background-color: white;
+}
+
+.household-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+}
+
+.household-summary p {
+  margin: 0;
 }
 
 .household-setup {

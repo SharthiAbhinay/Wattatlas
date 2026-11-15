@@ -10,6 +10,8 @@ import comparisonsRouter from "./routes/comparisons.js";
 import householdRouter from "./routes/household.js";
 import placesRouter from "./routes/places.js";
 import statesRouter from "./routes/states.js";
+import utilitiesRouter from "./routes/utilities.js";
+import utilityComparisonsRouter from "./routes/utilityComparisons.js";
 
 const distDir = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -45,6 +47,8 @@ export function createApp() {
   app.use("/api/auth", authRouter);
   app.use("/api/states", statesRouter);
   app.use("/api/places", placesRouter);
+  app.use("/api/utilities", utilitiesRouter);
+  app.use("/api/utility-comparisons", utilityComparisonsRouter);
   app.use("/api/comparisons", comparisonsRouter);
   app.use("/api/household", householdRouter);
   app.use("/api/bills", billsRouter);

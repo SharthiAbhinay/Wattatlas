@@ -19,6 +19,8 @@ export async function ensureHousehold(userId) {
     state: null,
     county: null,
     countyFips: null,
+    utilityId: null,
+    utilityName: null,
     memberIds: [userId],
     createdAt: now,
     updatedAt: now,
@@ -27,12 +29,24 @@ export async function ensureHousehold(userId) {
   return { ...doc, _id: insertedId };
 }
 
-export async function saveHousehold(userId, { state, county, countyFips }) {
+export async function saveHousehold(
+  userId,
+  { state, county, countyFips, utilityId = null, utilityName = null }
+) {
   const existing = await findHousehold(userId);
   if (existing) {
     return households().findOneAndUpdate(
       { _id: existing._id },
-      { $set: { state, county, countyFips, updatedAt: new Date() } },
+      {
+        $set: {
+          state,
+          county,
+          countyFips,
+          utilityId,
+          utilityName,
+          updatedAt: new Date(),
+        },
+      },
       { returnDocument: "after" }
     );
   }
@@ -41,6 +55,8 @@ export async function saveHousehold(userId, { state, county, countyFips }) {
     state,
     county,
     countyFips,
+    utilityId,
+    utilityName,
     memberIds: [userId],
     createdAt: now,
     updatedAt: now,

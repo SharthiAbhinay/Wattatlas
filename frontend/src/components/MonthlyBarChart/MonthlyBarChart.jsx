@@ -6,7 +6,20 @@ import "./MonthlyBarChart.css";
 const MARGIN = { top: 12, right: 8, bottom: 26, left: 52 };
 const MAX_BAR = 24;
 const RADIUS = 4;
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 // A column with a rounded top and a square base, so it sits on the baseline.
 function columnPath(x, y, w, h) {
@@ -17,7 +30,14 @@ function columnPath(x, y, w, h) {
 // One bar per month, January to December. `values` has 12 entries; a month
 // with no bill is null and draws no bar. One measure per chart, so there is
 // never a second y-axis.
-function MonthlyBarChart({ values, color, label, valueFormat, tickFormat, height = 180 }) {
+function MonthlyBarChart({
+  values,
+  color,
+  label,
+  valueFormat,
+  tickFormat,
+  height = 180,
+}) {
   const plotRef = useRef(null);
   const [width, setWidth] = useState(0);
   const [hover, setHover] = useState(null);
@@ -32,7 +52,11 @@ function MonthlyBarChart({ values, color, label, valueFormat, tickFormat, height
 
   const innerWidth = Math.max(0, width - MARGIN.left - MARGIN.right);
   const innerHeight = height - MARGIN.top - MARGIN.bottom;
-  const x = d3.scaleBand().domain(d3.range(12)).range([0, innerWidth]).padding(0.3);
+  const x = d3
+    .scaleBand()
+    .domain(d3.range(12))
+    .range([0, innerWidth])
+    .padding(0.3);
   const top = d3.max(values.filter((v) => v != null)) ?? 1;
   const y = d3.scaleLinear().domain([0, top]).nice().range([innerHeight, 0]);
   const barWidth = Math.min(MAX_BAR, x.bandwidth());
@@ -52,7 +76,12 @@ function MonthlyBarChart({ values, color, label, valueFormat, tickFormat, height
               {y.ticks(4).map((t) => (
                 <g key={t} transform={`translate(0,${y(t)})`}>
                   <line className="monthly-chart-grid" x2={innerWidth} />
-                  <text className="monthly-chart-tick" x={-8} dy="0.32em" textAnchor="end">
+                  <text
+                    className="monthly-chart-tick"
+                    x={-8}
+                    dy="0.32em"
+                    textAnchor="end"
+                  >
                     {tickFormat(t)}
                   </text>
                 </g>
@@ -88,7 +117,12 @@ function MonthlyBarChart({ values, color, label, valueFormat, tickFormat, height
                     />
                     {v != null && (
                       <path
-                        d={columnPath(cx - barWidth / 2, y(v), barWidth, innerHeight - y(v))}
+                        d={columnPath(
+                          cx - barWidth / 2,
+                          y(v),
+                          barWidth,
+                          innerHeight - y(v)
+                        )}
                         fill={color}
                         opacity={hover == null || hover === i ? 1 : 0.55}
                       />

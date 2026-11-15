@@ -12,6 +12,7 @@ export const LIMITS = {
   comparisonNameMax: 80,
   comparisonNotesMax: 2000,
   comparisonStatesMax: 4,
+  comparisonUtilitiesMax: 4,
 };
 
 export function parseObjectId(value) {
@@ -97,6 +98,48 @@ export function validateComparison(body = {}) {
   return { errors, value: { name, states, notes } };
 }
 
+// A saved comparison of electric utility companies: a name, one to four
+// utility numbers (whether each exists is checked by the route) and notes.
+export function validateUtilityComparison(body = {}) {
+  const errors = [];
+  const name = trimmed(body.name);
+  const notes = typeof body.notes === "string" ? body.notes.trim() : "";
+  const raw = Array.isArray(body.utilityIds) ? body.utilityIds : [];
+  const parsed = raw.map((id) =>
+    typeof id === "number" || (typeof id === "string" && id.trim() !== "")
+      ? Number(id)
+      : NaN
+  );
+  const utilityIds = [...new Set(parsed)];
+
+  if (!name) errors.push("Give the comparison a name.");
+  if (name.length > LIMITS.comparisonNameMax) {
+    errors.push(
+      `Name must be ${LIMITS.comparisonNameMax} characters or fewer.`
+    );
+  }
+  if (parsed.some((id) => !Number.isInteger(id) || id <= 0)) {
+    errors.push("Each utility must be picked from the list.");
+  } else {
+    if (utilityIds.length === 0) errors.push("Pick at least one utility.");
+    if (utilityIds.length > LIMITS.comparisonUtilitiesMax) {
+      errors.push(
+        `A comparison can hold up to ${LIMITS.comparisonUtilitiesMax} utilities.`
+      );
+    }
+    if (parsed.length !== utilityIds.length) {
+      errors.push("Each utility can appear only once.");
+    }
+  }
+  if (notes.length > LIMITS.comparisonNotesMax) {
+    errors.push(
+      `Notes must be ${LIMITS.comparisonNotesMax} characters or fewer.`
+    );
+  }
+
+  return { errors, value: { name, utilityIds, notes } };
+}
+
 export function validateHousehold(body = {}) {
   const errors = [];
   const state = trimmed(body.state).toUpperCase();
@@ -106,9 +149,20 @@ export function validateHousehold(body = {}) {
   if (!county) errors.push("Pick your county.");
   if (county.length > 100) errors.push("County name is too long.");
 
-  // Whether the county exists in that state is checked against the places
-  // data by the route, since it needs the database.
-  return { errors, value: { state, county } };
+  // The utility is optional: blank means "not listed" or "don't know".
+  let utilityId = null;
+  const rawUtility = trimmed(String(body.utilityId ?? ""));
+  if (rawUtility !== "") {
+    utilityId = Number(rawUtility);
+    if (!Number.isInteger(utilityId) || utilityId <= 0) {
+      errors.push("Pick a utility from the list, or leave it blank.");
+      utilityId = null;
+    }
+  }
+
+  // Whether the county exists in that state, and whether the utility serves
+  // it, is checked against the data by the route, since it needs the database.
+  return { errors, value: { state, county, utilityId } };
 }
 
 export function validateBill(body = {}) {

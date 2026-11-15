@@ -6,20 +6,38 @@ import {
   getYearBills,
   updateBill,
 } from "../../lib/api.js";
+import { useApiData } from "../../lib/useApiData.js";
 import HouseholdSetup from "./HouseholdSetup.jsx";
 import MonthlyBarChart from "../MonthlyBarChart/MonthlyBarChart.jsx";
 import "./Household.css";
 
+// 1,287,097 -> "1.3M", 15,507 -> "15.5K", 808 -> "808"
+const customerCount = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
+const formatCustomers = (n) => customerCount.format(n);
 const KWH_COLOR = "#0072b2";
 const COST_COLOR = "#d55e00";
 const MONTH_NAMES = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 const formatKwh = (n) => `${Math.round(n).toLocaleString("en-US")} kWh`;
 const formatDollars = (n) =>
   `$${n.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
-const compactKwh = (n) => (n >= 10000 ? `${n / 1000}K` : n.toLocaleString("en-US"));
+const compactKwh = (n) =>
+  n >= 10000 ? `${n / 1000}K` : n.toLocaleString("en-US");
 const compactDollars = (n) =>
   `$${n >= 10000 ? `${n / 1000}K` : n.toLocaleString("en-US")}`;
 
@@ -45,6 +63,11 @@ export default function Household() {
   const [error, setError] = useState("");
   // undefined while loading, null when the user has no household yet.
   const [household, setHousehold] = useState(undefined);
+  const [editingHousehold, setEditingHousehold] = useState(false);
+  // Utilities that serve the household's county (waits until it's known).
+  const utilities = useApiData(
+    household?.county ? "/api/household/utilities" : null
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -246,19 +269,44 @@ export default function Household() {
     );
   }
 
+  // Changing where the household lives (and its utility) later.
+  if (editingHousehold) {
+    return (
+      <HouseholdSetup
+        editing
+        initialState={household.state}
+        initialCounty={household.county}
+        initialUtilityId={household.utilityId ?? undefined}
+        onSaved={(saved) => {
+          setHousehold(saved);
+          setEditingHousehold(false);
+          utilities.reload();
+        }}
+        onCancel={() => setEditingHousehold(false)}
+      />
+    );
+  }
+
   return (
     <main className="household">
       <section>
         <h2>Your Household</h2>
-        <p>
-          {household.county}, {household.state}
-        </p>
+        <div className="household-summary">
+          <p>
+            {household.county}, {household.state}
+          </p>
+          <p>Utility: {household.utilityName ?? "Not chosen"}</p>
+          <button type="button" onClick={() => setEditingHousehold(true)}>
+            Edit location and utility
+          </button>
+        </div>
       </section>
       <section>
         <h2>Power Usage</h2>
         <div className="household-card">
           <p>
-            {year} total: {formatKwh(totalKwh)} &middot; {formatDollars(totalCost)}
+            {year} total: {formatKwh(totalKwh)} &middot;{" "}
+            {formatDollars(totalCost)}
           </p>
           <h3 className="chart-title">Power used (kWh)</h3>
           <MonthlyBarChart
@@ -290,8 +338,14 @@ export default function Household() {
                 {MONTH_NAMES.map((name, i) => (
                   <tr key={name}>
                     <th scope="row">{name}</th>
-                    <td>{kwhByMonth[i] == null ? "—" : formatKwh(kwhByMonth[i])}</td>
-                    <td>{costByMonth[i] == null ? "—" : formatDollars(costByMonth[i])}</td>
+                    <td>
+                      {kwhByMonth[i] == null ? "—" : formatKwh(kwhByMonth[i])}
+                    </td>
+                    <td>
+                      {costByMonth[i] == null
+                        ? "—"
+                        : formatDollars(costByMonth[i])}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -315,7 +369,7 @@ export default function Household() {
       </section>
 
       <section className="household-bills">
-        <h2>Household Bills</h2>
+        <h2>Monthly Bills</h2>
         <div className="household-card">
           {billContent}
           {error && <p role="alert">{error}</p>}
@@ -323,6 +377,50 @@ export default function Household() {
             <ul className="bill-history" aria-label="Past bills">
               {pastBills.map((b) => renderBill(b, "bill-card"))}
             </ul>
+          )}
+        </div>
+      </section>
+
+      <section className="household-utilities">
+        <h2>
+          Utilities serving {household.county}, {household.state}
+        </h2>
+        <div className="household-card">
+          {utilities.loading && <p role="status">Loading utilities…</p>}
+          {utilities.error && <p role="alert">{utilities.error.message}</p>}
+          {utilities.data && utilities.data.items.length === 0 && (
+            <p>We don&rsquo;t have utility data for this county.</p>
+          )}
+          {utilities.data && utilities.data.items.length > 0 && (
+            <ul className="bill-history utility-list">
+              {utilities.data.items.map((u) => (
+                <li key={u.utilityId} className="bill-card utility-card">
+                  <strong>{u.name}</strong>
+                  {u.customers === null ? (
+                    <span>No figures reported</span>
+                  ) : (
+                    <>
+                      <span>{formatCustomers(u.customers)} customers</span>
+                      <span>
+                        {u.centsPerKwh === null
+                          ? "—"
+                          : `$${(u.centsPerKwh / 100).toFixed(3)} per kWh`}
+                      </span>
+                      <span>
+                        {u.kwhPerMonth === null
+                          ? "—"
+                          : `${Math.round(u.kwhPerMonth).toLocaleString("en-US")} kWh/month`}
+                      </span>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+          {utilities.data?.year && (
+            <p className="utility-note">
+              Residential figures from {utilities.data.year}.
+            </p>
           )}
         </div>
       </section>

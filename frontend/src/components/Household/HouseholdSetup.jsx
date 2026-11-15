@@ -6,14 +6,31 @@ import { useApiData } from "../../lib/useApiData.js";
 // First-visit prompt: where does the household live? Both fields are
 // dropdowns fed by the server's own lists, and the server checks again that
 // the county really is in the chosen state before saving.
-export default function HouseholdSetup({ initialState = "", onSaved }) {
+export default function HouseholdSetup({
+  initialState = "",
+  initialCounty = "",
+  initialUtilityId = null,
+  editing = false,
+  onSaved,
+  onCancel,
+}) {
   const [state, setState] = useState(initialState);
-  const [county, setCounty] = useState("");
+  const [county, setCounty] = useState(initialCounty);
+  const [utilityId, setUtilityId] = useState(
+    initialUtilityId === null ? "" : String(initialUtilityId)
+  );
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
   const states = useApiData("/api/states");
   const counties = useApiData(state ? `/api/places/${state}/counties` : null);
+  // The utilities that serve the chosen county. Choosing one is optional.
+  const utilities = useApiData(
+    state && county
+      ? `/api/utilities/county?state=${state}&county=${encodeURIComponent(county)}`
+      : null
+  );
+  const utilityOptions = utilities.data?.items ?? [];
   const countyNames = (counties.data?.items ?? [])
     .map((c) => c.name)
     .sort((a, b) => a.localeCompare(b));
@@ -21,7 +38,13 @@ export default function HouseholdSetup({ initialState = "", onSaved }) {
   function handleStateChange(e) {
     setState(e.target.value);
     setCounty("");
+    setUtilityId("");
     setError("");
+  }
+
+  function handleCountyChange(e) {
+    setCounty(e.target.value);
+    setUtilityId("");
   }
 
   async function handleSubmit(e) {
@@ -29,7 +52,7 @@ export default function HouseholdSetup({ initialState = "", onSaved }) {
     setError("");
     setSaving(true);
     try {
-      const { household } = await saveHousehold({ state, county });
+      const { household } = await saveHousehold({ state, county, utilityId });
       onSaved(household);
     } catch (err) {
       setError(err.message);
@@ -43,9 +66,14 @@ export default function HouseholdSetup({ initialState = "", onSaved }) {
   return (
     <main className="household household-setup">
       <section>
-        <h2>Welcome! Where is your household?</h2>
+        <h2>
+          {editing
+            ? "Edit your household"
+            : "Welcome! Where is your household?"}
+        </h2>
         <p>
-          Tell us your state and county so we can set up your household.
+          Tell us your state and county, and your electric utility if you know
+          it.
         </p>
         <form className="household-card setup-form" onSubmit={handleSubmit}>
           <label>
@@ -68,7 +96,7 @@ export default function HouseholdSetup({ initialState = "", onSaved }) {
             County
             <select
               value={county}
-              onChange={(e) => setCounty(e.target.value)}
+              onChange={handleCountyChange}
               required
               disabled={!state || counties.loading || countyNames.length === 0}
             >
@@ -82,8 +110,27 @@ export default function HouseholdSetup({ initialState = "", onSaved }) {
               ))}
             </select>
           </label>
+          <label>
+            Electric utility (optional)
+            <select
+              value={utilityId}
+              onChange={(e) => setUtilityId(e.target.value)}
+              disabled={!county || utilities.loading}
+            >
+              <option value="">
+                {county ? "Not listed / I don't know" : "Pick a county first"}
+              </option>
+              {utilityOptions.map((u) => (
+                <option key={u.utilityId} value={u.utilityId}>
+                  {u.name}
+                </option>
+              ))}
+            </select>
+          </label>
           {noCounties && (
-            <p role="alert">We don&rsquo;t have county data for that state yet.</p>
+            <p role="alert">
+              We don&rsquo;t have county data for that state yet.
+            </p>
           )}
           {(error || states.error || counties.error) && (
             <p role="alert">
@@ -93,6 +140,11 @@ export default function HouseholdSetup({ initialState = "", onSaved }) {
           <button type="submit" disabled={!state || !county || saving}>
             {saving ? "Saving…" : "Save household"}
           </button>
+          {onCancel && (
+            <button type="button" onClick={onCancel} disabled={saving}>
+              Cancel
+            </button>
+          )}
         </form>
       </section>
     </main>
@@ -101,5 +153,9 @@ export default function HouseholdSetup({ initialState = "", onSaved }) {
 
 HouseholdSetup.propTypes = {
   initialState: PropTypes.string,
+  initialCounty: PropTypes.string,
+  initialUtilityId: PropTypes.number,
+  editing: PropTypes.bool,
   onSaved: PropTypes.func.isRequired,
+  onCancel: PropTypes.func,
 };

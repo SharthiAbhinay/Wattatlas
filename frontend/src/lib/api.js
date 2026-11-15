@@ -59,10 +59,10 @@ export const getHousehold = (signal) => apiFetch("/api/household", { signal });
 export const saveHousehold = (household) =>
   apiFetch("/api/household", { method: "PUT", body: household });
 
-export const getBills =(signal) => apiFetch("/api/bills", { signal });
+export const getBills = (signal) => apiFetch("/api/bills", { signal });
 export const getYearBills = (year, signal) =>
   apiFetch(`/api/bills/year?year=${encodeURIComponent(year)}`, { signal });
-export const addBill =(bill) =>
+export const addBill = (bill) =>
   apiFetch("/api/bills", { method: "POST", body: bill });
 export const updateBill = (id, bill) =>
   apiFetch(`/api/bills/${encodeURIComponent(id)}`, {
@@ -70,7 +70,7 @@ export const updateBill = (id, bill) =>
     body: bill,
   });
 
-export const getComparison =(id, signal) =>
+export const getComparison = (id, signal) =>
   apiFetch(`/api/comparisons/${encodeURIComponent(id)}`, { signal });
 export const createComparison = (comparison) =>
   apiFetch("/api/comparisons", { method: "POST", body: comparison });
@@ -81,3 +81,17 @@ export const updateComparison = (id, comparison) =>
   });
 export const deleteComparison = (id) =>
   apiFetch(`/api/comparisons/${encodeURIComponent(id)}`, { method: "DELETE" });
+
+export const getUtilityComparison = (id, signal) =>
+  apiFetch(`/api/utility-comparisons/${encodeURIComponent(id)}`, { signal });
+export const createUtilityComparison = (comparison) =>
+  apiFetch("/api/utility-comparisons", { method: "POST", body: comparison });
+export const updateUtilityComparison = (id, comparison) =>
+  apiFetch(`/api/utility-comparisons/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    body: comparison,
+  });
+export const deleteUtilityComparison = (id) =>
+  apiFetch(`/api/utility-comparisons/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });

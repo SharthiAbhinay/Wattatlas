@@ -50,14 +50,18 @@ export async function ensureIndexes() {
   await Promise.all([
     db.collection("users").createIndex({ usernameLower: 1 }, { unique: true }),
     db.collection("households").createIndex({ memberIds: 1 }, { unique: true }),
-    db
-      .collection("bills")
-      .createIndex(
-        { householdId: 1, month: -1 },
-        // Skip any leftover bills that never got a household.
-        { unique: true, partialFilterExpression: { householdId: { $exists: true } } }
-      ),
+    db.collection("bills").createIndex(
+      { householdId: 1, month: -1 },
+      // Skip any leftover bills that never got a household.
+      {
+        unique: true,
+        partialFilterExpression: { householdId: { $exists: true } },
+      }
+    ),
     db.collection("comparisons").createIndex({ userId: 1, updatedAt: -1 }),
+    db
+      .collection("utilityComparisons")
+      .createIndex({ userId: 1, updatedAt: -1 }),
     db
       .collection("stateSales")
       .createIndex(
@@ -75,7 +79,9 @@ export async function ensureIndexes() {
     db
       .collection("utilityTerritories")
       .createIndex({ state: 1, county: 1, year: -1 }),
-    db.collection("utilityTerritories").createIndex({ countyFips: 1, year: -1 }),
+    db
+      .collection("utilityTerritories")
+      .createIndex({ countyFips: 1, year: -1 }),
     db.collection("utilityTerritories").createIndex({ utilityId: 1, year: -1 }),
   ]);
 }

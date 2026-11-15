@@ -1,0 +1,48 @@
+.price-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.price-chart-row {
+  display: grid;
+  grid-template-columns: minmax(6rem, 11rem) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+/* The average sits apart from the companies, after a divider. */
+.price-chart-row.is-average {
+  margin-top: var(--space-1);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--rule);
+  font-weight: 700;
+}
+
+.price-chart-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* A faint track the bar grows along, from the zero line. */
+.price-chart-track {
+  display: block;
+  height: 1.5rem;
+  border-left: 1px solid var(--rule-strong);
+}
+
+.price-chart-bar {
+  display: block;
+  height: 100%;
+  max-width: 100%;
+  border-radius: 0 4px 4px 0;
+}
+
+.price-chart-value {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

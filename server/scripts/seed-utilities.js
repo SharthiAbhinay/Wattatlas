@@ -369,25 +369,41 @@ async function main() {
     return;
   }
 
+  // Years can be seeded in any order. A utility's name, ownership and states
+  // come from its newest year, so an older year never overwrites them.
+  const now = new Date();
   await db.collection("utilities").bulkWrite(
-    [...utilities.values()].map((u) => ({
-      updateOne: {
-        filter: { utilityId: u.utilityId },
-        update: {
-          $set: {
-            name: u.name,
-            ownership: u.ownership,
-            type: utilityType(u.ownership),
-            shortForm: shortForm.has(u.utilityId),
-            states: [...u.states].sort(),
-            updatedAt: new Date(),
-          },
-          $max: { latestYear: year },
-          $setOnInsert: { createdAt: new Date() },
+    [...utilities.values()].map((u) => {
+      const keep = (field, value) => ({
+        $cond: ["$isNewest", { $literal: value }, `$${field}`],
+      });
+      return {
+        updateOne: {
+          filter: { utilityId: u.utilityId },
+          update: [
+            {
+              $set: {
+                isNewest: { $gte: [year, { $ifNull: ["$latestYear", 0] }] },
+              },
+            },
+            {
+              $set: {
+                name: keep("name", u.name),
+                ownership: keep("ownership", u.ownership),
+                type: keep("type", utilityType(u.ownership)),
+                shortForm: keep("shortForm", shortForm.has(u.utilityId)),
+                states: keep("states", [...u.states].sort()),
+                latestYear: { $max: [year, { $ifNull: ["$latestYear", 0] }] },
+                createdAt: { $ifNull: ["$createdAt", now] },
+                updatedAt: now,
+              },
+            },
+            { $unset: "isNewest" },
+          ],
+          upsert: true,
         },
-        upsert: true,
-      },
-    }))
+      };
+    })
   );
   await db.collection("utilityStats").deleteMany({ year });
   await insertAll(db.collection("utilityStats"), stats);
