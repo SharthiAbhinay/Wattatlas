@@ -4,6 +4,9 @@ node_modules/
 # Build output
 frontend/dist/
 
+# Vercel CLI project link
+.vercel/
+
 # Secrets: copy .env.example to .env
 .env
 .env.*

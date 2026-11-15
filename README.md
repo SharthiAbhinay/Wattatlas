@@ -55,15 +55,16 @@ _TODO: add `design.pdf`, covering the project description, user personas, user s
 
 ## Tech Stack
 
-| Layer    | Technologies                                                                    |
-| -------- | ------------------------------------------------------------------------------- |
-| Frontend | React 18 with Hooks, built with Vite; React Router; PropTypes                   |
-| Charts   | D3, topojson-client, us-atlas                                                   |
-| Backend  | Node.js, Express                                                                |
-| Database | MongoDB Atlas with the native driver (no Mongoose)                              |
-| Auth     | Passport (local strategy), express-session, connect-mongo, bcrypt               |
-| Data     | EIA Open Data API, NREL City and County Energy Profiles, EIA-861 utility survey |
-| Tooling  | ESLint, Prettier                                                                |
+| Layer      | Technologies                                                                    |
+| ---------- | ------------------------------------------------------------------------------- |
+| Frontend   | React 18 with Hooks, built with Vite; React Router; PropTypes                   |
+| Charts     | D3, topojson-client, us-atlas                                                   |
+| Backend    | Node.js, Express                                                                |
+| Database   | MongoDB Atlas with the native driver (no Mongoose)                              |
+| Auth       | Passport (local strategy), express-session, connect-mongo, bcrypt               |
+| Data       | EIA Open Data API, NREL City and County Energy Profiles, EIA-861 utility survey |
+| Tooling    | ESLint, Prettier                                                                |
+| Deployment | Vercel                                                                          |
 
 ## Data
 
@@ -103,9 +104,12 @@ City and county figures are model estimates, and the app labels them that way. U
 │       ├── App.jsx          # Routes, login state and the map page layout
 │       ├── components/      # One folder per component, each with its own CSS
 │       └── lib/             # fetch helpers, the useApiData hook, formatting
+├── api/
+│   └── index.js             # Entry point Vercel runs for every /api request
 ├── data/raw/                # Downloaded source CSV files (not committed)
 ├── images/                  # Screenshot shown in this README
 ├── package.json             # Backend dependencies, scripts and Prettier settings
+├── vercel.json              # Vercel build, output folder and routing
 ├── eslint.config.js         # ESLint config
 ├── LICENSE
 └── README.md
@@ -137,6 +141,8 @@ npm --prefix frontend install
 ```
 
 ### 2. Create a `.env` file
+
+Copy `.env.example` to `.env` and fill in your own values. `.env` is listed in `.gitignore`, so it never reaches GitHub.
 
 ```
 MONGODB_URI=<your MongoDB Atlas connection string>
@@ -199,6 +205,25 @@ npm run lint
 npm run format
 ```
 
+## Deploying to Vercel
+
+1. Push the repository to GitHub and import it in Vercel (**Add New > Project**). `vercel.json` already sets the install command, the build command and the output folder, so leave those settings as they are.
+2. In the project's **Settings > Environment Variables**, add `MONGODB_URI`, `DB_NAME`, `SESSION_SECRET` and `NODE_ENV` set to `production`.
+3. In MongoDB Atlas, under **Network Access**, allow access from anywhere (`0.0.0.0/0`), because Vercel's servers don't have fixed IP addresses.
+4. Load the data from your own computer with the seed scripts above. They write straight to Atlas and create the database indexes, so the deployed app needs no extra setup.
+
+Vercel builds the React app and serves it from its CDN. `api/index.js` runs the Express app as a Vercel Function for every `/api` request, and any other path returns `index.html`, so links like `/household` still work after a refresh.
+
+## Security
+
+- **No secrets in the repository.** The MongoDB connection string, the session secret and the EIA API key exist only in `.env` on each developer's computer and in Vercel's environment variables. `.env` is in `.gitignore`, and `.env.example` lists the variable names with no values.
+- **No built-in fallbacks.** The server refuses to start without `MONGODB_URI` and `SESSION_SECRET` rather than falling back to a default value.
+- **No demo accounts.** Neither this README nor any script contains a username or password; every account is created on the sign-up page.
+- **Passwords** are hashed with bcrypt (12 rounds) and never sent back to the browser.
+- **Sessions** are stored in MongoDB, and the session cookie is HTTP-only, SameSite=Lax and, in production, Secure.
+- **Private data stays private.** Comparisons, households and bills are always looked up together with the logged-in user, so nobody can read or change another user's data.
+- **Database access.** The app connects as an Atlas database user that only needs read and write access to the `wattatlas` database, with a long random password.
+
 ## GenAI Usage
 
 ### Sharthi Abhinay
@@ -214,6 +239,8 @@ Prompts used:
 - "How do I convert the city and county CSV files?" (with the NREL workbook attached)
 - "I have merged the branch. Please check the code in the local files, remove the bugs and make everything flow systematically."
 - "Complete the README file similar to my previous web dev projects."
+- "Make the files ready to deploy on Vercel."
+- "Update the README, and make sure no secret credentials are exposed. I lost points for that in my last project."
 
 ### Emily Huang
 
@@ -231,6 +258,7 @@ _TODO: add Emily's tool and prompts._
 - Vite: https://vite.dev
 - Passport: https://www.passportjs.org
 - MongoDB Node.js driver documentation: https://www.mongodb.com/docs/drivers/node/current/
+- Express on Vercel: https://vercel.com/docs/frameworks/backend/express
 - ColorBrewer: https://colorbrewer2.org
 
 ## License

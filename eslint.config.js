@@ -10,7 +10,7 @@ export default [
   js.configs.recommended,
   {
     // Server code and config files run in Node.
-    files: ["server/**/*.js", "*.js", "frontend/vite.config.js"],
+    files: ["server/**/*.js", "api/**/*.js", "*.js", "frontend/vite.config.js"],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
