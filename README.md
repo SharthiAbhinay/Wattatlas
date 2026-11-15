@@ -40,11 +40,11 @@ _TODO: add the link to the narrated walkthrough._
 
 ## Presentation Slides
 
-_TODO: add the link to the slides._
+Our project presentation: [view on Google Slides](https://docs.google.com/presentation/d/1DJTXsuCEUbzI2O_3V0Z_Tyu2axc9_q32dTd_eK-1Tz8/edit?usp=sharing)
 
 ## Design Document
 
-_TODO: add `design.pdf`, covering the project description, user personas, user stories and design mockups._
+[design.pdf](design.pdf) covers the project description, user personas, user stories and design mockups.
 
 ## Design
 
@@ -108,6 +108,7 @@ City and county figures are model estimates, and the app labels them that way. U
 │   └── index.js             # Entry point Vercel runs for every /api request
 ├── data/raw/                # Downloaded source CSV files (not committed)
 ├── images/                  # Screenshot shown in this README
+├── design.pdf               # Personas, user stories and mockups
 ├── package.json             # Backend dependencies, scripts and Prettier settings
 ├── vercel.json              # Vercel build, output folder and routing
 ├── eslint.config.js         # ESLint config
