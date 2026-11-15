@@ -220,14 +220,50 @@ function readStats({ file, rows }, year) {
 
 // "Hennepin County", "St. Louis" and "Saint Louis" should all find the
 // same place, while "Baltimore city" stays different from "Baltimore".
+// "Juneau City and Borough", "Juneau" and "JUNEAU" all give the same key, and
+// so do "Yukon-Koyukuk" and "Yukon Koyukuk", "De Soto" and "DeSoto", or "Doña
+// Ana" and "Dona Ana".
 const countyKey = (state, name) =>
   `${state}|${name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[.']/g, "")
     .replace(/\bsaint\b/g, "st")
-    .replace(/\s+(county|parish|borough|census area|municipality)$/, "")
-    .replace(/\s+/g, " ")
-    .trim()}`;
+    .replace(
+      /\s+(city and borough|county|parish|borough|census area|municipality)$/,
+      ""
+    )
+    .replace(/[\s-]+/g, "")}`;
+
+// EIA-861 still uses some older names. Each maps to the county or counties
+// in the places data that cover the same area today.
+const RENAMED_COUNTIES = {
+  "AK|wadehampton": ["Kusilvak Census Area"],
+  "AK|princeofwalesketchikan": ["Prince of Wales-Hyder Census Area"],
+  "AK|princeofwalesouterketchikan": ["Prince of Wales-Hyder Census Area"],
+  "AK|skagwayhoonahangoon": [
+    "Skagway Municipality",
+    "Hoonah-Angoon Census Area",
+  ],
+  "AK|wrangellpetersburg": [
+    "Wrangell City and Borough",
+    "Petersburg Census Area",
+  ],
+  "AK|chugach": ["Valdez-Cordova Census Area"],
+  "AK|copperriver": ["Valdez-Cordova Census Area"],
+  "SD|shannon": ["Oglala Lakota County"],
+  "VA|bedfordcity": ["Bedford County"],
+};
+
+function findCounties(countyLookup, state, county) {
+  const key = countyKey(state, county);
+  const direct = countyLookup.get(key);
+  if (direct) return [direct];
+  return (RENAMED_COUNTIES[key] ?? [])
+    .map((name) => countyLookup.get(countyKey(state, name)))
+    .filter(Boolean);
+}
 
 // "Service_Territory": one row per utility, state and county.
 function readTerritories({ file, rows }, year, countyLookup) {
@@ -238,6 +274,7 @@ function readTerritories({ file, rows }, year, countyLookup) {
   const names = new Map();
   const shortForm = new Set();
   const unmatched = new Set();
+  const seen = new Set();
   for (const row of table.rows) {
     const utilityId = toNumber(row[columns["Utility Number"]]);
     const state = findState(row[columns.State]);
@@ -247,16 +284,18 @@ function readTerritories({ file, rows }, year, countyLookup) {
     if (row[columns["Short Form"]]?.trim().toUpperCase() === "Y") {
       shortForm.add(utilityId);
     }
-    const place = countyLookup.get(countyKey(state.abbr, county));
-    if (!place) unmatched.add(`${county}, ${state.abbr}`);
-    territories.push({
-      utilityId,
-      year,
-      state: state.abbr,
-      // Spelled the way the places data (and a household's county) spells it.
-      county: place?.name ?? county,
-      countyFips: place?.fips ?? null,
-    });
+    const places = findCounties(countyLookup, state.abbr, county);
+    if (places.length === 0) unmatched.add(`${county}, ${state.abbr}`);
+    // Spelled the way the places data (and a household's county) spells it.
+    const matches = places.length
+      ? places.map((p) => ({ county: p.name, countyFips: p.fips }))
+      : [{ county, countyFips: null }];
+    for (const match of matches) {
+      const key = `${utilityId}|${state.abbr}|${match.county}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      territories.push({ utilityId, year, state: state.abbr, ...match });
+    }
   }
   return { territories, unmatched, names, shortForm };
 }
