@@ -32,7 +32,11 @@ Government agencies publish electricity data in separate tools built for special
 
 ## Screenshot
 
-_TODO: add a screenshot of the map, for example `images/wattatlas-map.png`._
+![WattAtlas zoomed into Texas, with counties colored by electricity use per person and the state's details beside the map](images/wattatlas-map.png)
+
+A quick tour: the US map, zooming into Texas, and switching between use per person, total use and average price.
+
+![Animated walkthrough of the WattAtlas map](images/wattatlas-demo.gif)
 
 ## Video Demo
 
