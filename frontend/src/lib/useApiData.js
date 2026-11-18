@@ -17,6 +17,9 @@ export function useApiData(path, { keepPrevious = false } = {}) {
       setState({ data: null, error: null, loading: false });
       return undefined;
     }
+    // Chunzhang Liu: Nice use of AbortController with effect cleanup below.
+    // Cancelling the previous request when the path changes helps prevent an
+    // older response from replacing the data for the newly selected state.
     const controller = new AbortController();
     setState((previous) => ({
       data: keepPrevious ? previous.data : null,
