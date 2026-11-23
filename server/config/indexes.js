@@ -5,11 +5,12 @@ import { getDb } from "./db.js";
 // reject new households that have no userId.
 async function migrateHouseholds(db) {
   const households = db.collection("households");
+  await households.dropIndex("userId_1").catch(() => null);
   await households.updateMany({ userId: { $exists: true } }, [
     { $set: { memberIds: ["$userId"] } },
     { $unset: "userId" },
   ]);
-  await households.dropIndex("userId_1").catch(() => null);
+  
 
   // Bills used to be keyed by userId. Give each one its household and author.
   const bills = db.collection("bills");
