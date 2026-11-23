@@ -11,7 +11,8 @@ const LOGIN_FAILED = "Incorrect username or password.";
 
 // Compared against when the username does not exist, so a wrong username
 // takes as long to reject as a wrong password.
-const DUMMY_HASH = bcrypt.hashSync("wattatlas-timing-guard", 10);
+const BCRYPT_ROUNDS = 12;
+const DUMMY_HASH = bcrypt.hashSync("wattatlas-timing-guard", BCRYPT_ROUNDS);
 
 let configured = false;
 
