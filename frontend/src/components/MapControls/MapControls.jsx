@@ -29,6 +29,9 @@ function MapControls({
         </div>
       </fieldset>
 
+      {/* Chunzhang Liu: The labeled native select is a thoughtful alternative
+          to clicking the map. It lets keyboard users choose a state through
+          the same onSelectState callback, keeping both interactions consistent. */}
       <div className="map-controls-field">
         <label htmlFor="map-state">Zoom to a state</label>
         <select

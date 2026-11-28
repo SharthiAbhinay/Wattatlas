@@ -10,6 +10,9 @@ export function listComparisons(userId) {
 }
 
 export function findComparison(userId, _id) {
+  // Chunzhang Liu: I like that reads, updates, and deletes all include userId
+  // in the database filter. Keeping ownership checks in these queries makes
+  // the access boundary clear and avoids relying on the UI to hide records.
   return comparisons().findOne({ _id, userId });
 }
 

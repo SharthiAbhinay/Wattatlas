@@ -27,6 +27,9 @@ import TrendChart from "../TrendChart/TrendChart.jsx";
 import "./ComparisonEditor.css";
 
 const MAX_STATES = 4;
+// Chunzhang Liu: Minor maintenance suggestion: NAME_MAX and NOTES_MAX are also
+// defined in UtilityComparisonEditor and server/lib/validation.js. A shared
+// browser-safe constants module could keep these limits in sync if they change.
 const NAME_MAX = 80;
 const NOTES_MAX = 2000;
 

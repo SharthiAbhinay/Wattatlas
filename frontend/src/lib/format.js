@@ -2,6 +2,9 @@
 const formatters = new Map();
 
 function numberFormat(digits) {
+  // Chunzhang Liu: Caching Intl.NumberFormat by precision is a nice detail.
+  // The map, charts, and tables can share consistent formatting without
+  // constructing a new formatter for every displayed number.
   if (!formatters.has(digits)) {
     formatters.set(
       digits,
@@ -80,6 +83,10 @@ export function formatOrdinal(n) {
   return `${n}${{ 1: "st", 2: "nd", 3: "rd" }[n % 10] ?? "th"}`;
 }
 
+// Chunzhang Liu: Small optional improvement: consider checking for an invalid
+// date and returning NO_DATA, as the numeric helpers do. An invalid date string
+// currently throws a RangeError; a fallback would make this helper more robust
+// if incomplete data ever reaches it.
 export const formatDate = (value) => dateFormat.format(new Date(value));
 
 export const monthName = (month) =>
